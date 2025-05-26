@@ -87,23 +87,6 @@ def insert_data(name, email, res_score, timestamp, no_of_pages, reco_field, cand
     rec_values = (name, email, str(res_score), timestamp, str(no_of_pages), reco_field, cand_level, skills, recommended_skills, courses)
     cursor.execute(insert_sql, rec_values)
     connection.commit()
-    
-# def clean_database():
-#     try:
-#         # Disable foreign key checks temporarily
-#         cursor.execute("SET FOREIGN_KEY_CHECKS = 0")
-            
-#         # Truncate the table (faster than DELETE)
-#         cursor.execute("TRUNCATE TABLE user_data")
-        
-#         # Re-enable foreign key checks
-#         cursor.execute("SET FOREIGN_KEY_CHECKS = 1")
-        
-#         connection.commit()
-#         return True
-#     except Exception as e:
-#         st.error(f"Error cleaning database: {str(e)}")
-#         return False
         
 def detect_responsibility_section(text):
     """Advanced detection of responsibility/leadership content"""
@@ -124,25 +107,11 @@ def detect_responsibility_section(text):
 # Then replace your existing code with this:
 
 def run():
-    # Header Section
-    # col1, col2 = st.columns([1, 3])
-    # with col1:
-    #     img = Image.open('./Logo/logo3.png')
-    #     img = img.resize((500,250))
-    #     st.image(img)
-    # with col2:
-    #     st.title("CareerCompass Resume Analyzer")
-    #     st.markdown("""
-    #     <div class="subheader">
-    #         AI-powered resume analysis for your career growth
-    #     </div>
-    #     """, unsafe_allow_html=True)
-        
     col1 = st.container()
     with col1:
-        img = Image.open('./Logo/logo3.png')
-        # img = img.resize((500,250))  # Adjust size as needed
-        st.image(img)  # Center the logo
+        img = Image.open('./Logo/logo4(1).png')
+        img = img.resize((500,150))  # Adjust size as needed
+        st.image(img)  # Center the logo    
 
     # Add some vertical space
     st.write("")  # Empty line for spacing
@@ -157,12 +126,7 @@ def run():
             AI-powered resume analysis for your career growth
         </div>
         """, unsafe_allow_html=True)
-        
-    # Sidebar
-    # st.sidebar.title("Navigation")
-    # activities = ["User", "Admin"]
-    # choice = st.sidebar.selectbox("Select Mode:", activities)
-    # Replace your current sidebar selectbox with this:
+
     choice = st.sidebar.selectbox("Choose your login type:", ["User", "Admin"], index=0)
     st.sidebar.markdown("""
     <div class="sidebar-footer">
@@ -278,113 +242,6 @@ def run():
                     key='1'
                 )
 
-                # Skills Recommendation Engine
-                # ds_keyword = ['tensorflow','keras','pytorch','machine learning','deep Learning','flask','streamlit']
-                # web_keyword = ['react', 'django', 'node js', 'react js', 'php', 'laravel', 'magento', 'wordpress',
-                #              'javascript', 'angular js', 'c#', 'flask']
-                # android_keyword = ['android','android development','flutter','kotlin','xml','kivy']
-                # ios_keyword = ['ios','ios development','swift','cocoa','cocoa touch','xcode']
-                # uiux_keyword = ['ux','adobe xd','figma','zeplin','balsamiq','ui','prototyping','wireframes','storyframes','adobe photoshop','photoshop','editing','adobe illustrator','illustrator','adobe after effects','after effects','adobe premier pro','premier pro','adobe indesign','indesign','wireframe','solid','grasp','user research','user experience']
-
-                # recommended_skills = []
-                # reco_field = ''
-                # rec_course = ''
-                
-                # for i in resume_data['skills']:
-                #     # Data Science Recommendation
-                #     if i.lower() in ds_keyword:
-                #         reco_field = 'Data Science'
-                #         st.success("🎯 Our analysis suggests you're pursuing Data Science roles.")
-                #         recommended_skills = ['Data Visualization','Predictive Analysis','Statistical Modeling','Data Mining','Clustering & Classification','Data Analytics','Quantitative Analysis','Web Scraping','ML Algorithms','Keras','Pytorch','Probability','Scikit-learn','Tensorflow',"Flask",'Streamlit']
-                #         recommended_keywords = st_tags(
-                #             label='### Recommended Skills to Add',
-                #             text='These skills will make you more competitive:',
-                #             value=recommended_skills,
-                #             key='2'
-                #         )
-                #         st.markdown("""
-                #         <div class="recommendation-note">
-                #             <p>Adding these skills to your resume could increase your job prospects by 40%</p>
-                #         </div>
-                #         """, unsafe_allow_html=True)
-                #         rec_course = course_recommender(ds_course)
-                #         break
-
-                #     # Web Development Recommendation
-                #     elif i.lower() in web_keyword:
-                #         reco_field = 'Web Development'
-                #         st.success("🎯 Our analysis suggests you're pursuing Web Development roles.")
-                #         recommended_skills = ['React','Django','Node JS','React JS','php','laravel','Magento','wordpress','Javascript','Angular JS','c#','Flask','SDK']
-                #         recommended_keywords = st_tags(
-                #             label='### Recommended Skills to Add',
-                #             text='These skills will make you more competitive:',
-                #             value=recommended_skills,
-                #             key='3'
-                #         )
-                #         st.markdown("""
-                #         <div class="recommendation-note">
-                #             <p>Adding these skills to your resume could increase your job prospects by 35%</p>
-                #         </div>
-                #         """, unsafe_allow_html=True)
-                #         rec_course = course_recommender(web_course)
-                #         break
-
-                #     # Android Development Recommendation
-                #     elif i.lower() in android_keyword:
-                #         reco_field = 'Android Development'
-                #         st.success("🎯 Our analysis suggests you're pursuing Android Development roles.")
-                #         recommended_skills = ['Android','Android development','Flutter','Kotlin','XML','Java','Kivy','GIT','SDK','SQLite']
-                #         recommended_keywords = st_tags(
-                #             label='### Recommended Skills to Add',
-                #             text='These skills will make you more competitive:',
-                #             value=recommended_skills,
-                #             key='4'
-                #         )
-                #         st.markdown("""
-                #         <div class="recommendation-note">
-                #             <p>Adding these skills to your resume could increase your job prospects by 30%</p>
-                #         </div>
-                #         """, unsafe_allow_html=True)
-                #         rec_course = course_recommender(android_course)
-                #         break
-
-                #     # iOS Development Recommendation
-                #     elif i.lower() in ios_keyword:
-                #         reco_field = 'iOS Development'
-                #         st.success("🎯 Our analysis suggests you're pursuing iOS Development roles.")
-                #         recommended_skills = ['iOS','iOS Development','Swift','Cocoa','Cocoa Touch','Xcode','Objective-C','SQLite','Plist','StoreKit',"UI-Kit",'AV Foundation','Auto-Layout']
-                #         recommended_keywords = st_tags(
-                #             label='### Recommended Skills to Add',
-                #             text='These skills will make you more competitive:',
-                #             value=recommended_skills,
-                #             key='5'
-                #         )
-                #         st.markdown("""
-                #         <div class="recommendation-note">
-                #             <p>Adding these skills to your resume could increase your job prospects by 30%</p>
-                #         </div>
-                #         """, unsafe_allow_html=True)
-                #         rec_course = course_recommender(ios_course)
-                #         break
-
-                #     # UI/UX Recommendation
-                #     elif i.lower() in uiux_keyword:
-                #         reco_field = 'UI/UX Design'
-                #         st.success("🎯 Our analysis suggests you're pursuing UI/UX Design roles.")
-                #         recommended_skills = ['UI','User Experience','Adobe XD','Figma','Zeplin','Balsamiq','Prototyping','Wireframes','Storyframes','Adobe Photoshop','Editing','Illustrator','After Effects','Premier Pro','Indesign','Wireframe','Solid','Grasp','User Research']
-                #         recommended_keywords = st_tags(
-                #             label='### Recommended Skills to Add',
-                #             text='These skills will make you more competitive:',
-                #             value=recommended_skills,
-                #             key='6'
-                #         )
-                #         st.markdown("""
-                #         <div class="recommendation-note">
-                #             <p>Adding these skills to your resume could increase your job prospects by 25%</p>
-                #         </div>
-                #         """, unsafe_allow_html=True)
-                #         rec_course = course_recommender(uiux_course)
-                #         break
                 # 1. First, create a domain scoring system
                 domain_scores = {
                     'Data Science': 0,
