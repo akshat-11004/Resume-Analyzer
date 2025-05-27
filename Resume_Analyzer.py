@@ -116,20 +116,52 @@ def detect_responsibility_section(text):
 
 # Add to your resume processing code
 def extract_phone_number(text):
-    # More comprehensive phone number regex
-    phone_regex = r'(\+?\d{1,2}\s?)?(\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{2}[\s.-]?\d{2})'
-    matches = re.finditer(phone_regex, text)
+    """
+    Comprehensive phone number extractor that handles:
+    - International numbers with country codes (+91, +1, etc.)
+    - Indian mobile numbers (10 digits with/without country code)
+    - Various formatting styles (spaces, hyphens, parentheses)
+    - Numbers with or without country codes
+    """
+    # Comprehensive phone number regex pattern
+    phone_regex = r'''
+        (?:\+?(\d{1,3}))?                # Optional country code (1-3 digits)
+        [\s.-]?                           # Optional separator
+        (?:\(?\d{1,4}\)?[\s.-]?)?        # Optional area code
+        (\d{5,})                          # Main number (5+ digits)
+        (?:[\s.-]?\d{1,5})*               # Optional extensions
+        (?![\d])                          # Negative lookahead for more digits
+    '''
+    
+    matches = re.finditer(phone_regex, text, re.VERBOSE)
+    
     for match in matches:
-        # Validate the phone number
-        phone = match.group().strip()
-        if sum(c.isdigit() for c in phone) >= 7:  # At least 7 digits
-            return phone
+        country_code = match.group(1) or ""
+        main_number = match.group(2)
+        
+        # Remove all non-digit characters
+        clean_number = re.sub(r'[^\d]', '', main_number)
+        
+        # Skip if the number is too short
+        if len(clean_number) < 7:
+            continue
+            
+        # Handle country code
+        if country_code:
+            full_number = f"+{country_code}{clean_number}"
+            
+            # Special formatting for Indian numbers
+            if country_code == '91' and len(clean_number) == 10:
+                return f"+{country_code} {clean_number[:5]} {clean_number[5:]}"
+            return full_number
+        else:
+            # Handle local numbers (10 digits assumed to be Indian)
+            if len(clean_number) == 10:
+                return f"+91 {clean_number[:5]} {clean_number[5:]}"
+            return clean_number
+            
     return None
 
-# # After getting resume_data
-# if 'mobile_number' not in resume_data or not resume_data['mobile_number']:
-#     resume_text = pdf_reader(save_image_path)
-#     resume_data['mobile_number'] = extract_phone_number(resume_text)
 
 def run():
     col1 = st.container()
@@ -207,7 +239,6 @@ def run():
             
             # Parse Resume
             resume_data = ResumeParser(save_image_path).get_extracted_data()
-            
             if resume_data:
                 resume_text = pdf_reader(save_image_path)
                 # Personal Information
@@ -218,7 +249,7 @@ def run():
                 """, unsafe_allow_html=True)
                 if 'name' in resume_data:
                     # Check if extracted name looks like a job title
-                    job_title_terms = ['developer', 'engineer', 'designer', 'manager', 'analyst']
+                    job_title_terms = ['developer', 'engineer', 'designer', 'manager', 'analyst','chef']
                     if any(term in resume_data['name'].lower() for term in job_title_terms):
                         # Look for proper name (all caps, between other fields)
                         name_match = re.search(r'(?:^|\n)([A-Z][A-Z\s]+[A-Z])(?:\n|$)', resume_text)
@@ -228,11 +259,7 @@ def run():
                 # 2. Fix phone number extraction
                 if 'mobile_number' not in resume_data or not resume_data['mobile_number']:
                     resume_data['mobile_number'] = extract_phone_number(resume_text)
-
-                # 3. Display corrected information
-                # st.info(f"👤 **Name:** {resume_data.get('name', 'Not specified')}")
-                # st.info(f"📱 **Contact:** {resume_data.get('mobile_number', 'Not specified')}")
-                
+                    
                 info_col1, info_col2 = st.columns(2)
                 with info_col1:
                     st.info(f"👤 **Name:** {resume_data.get('name', 'Not specified')}")
@@ -345,7 +372,7 @@ def run():
                         # Show recommendations
                         recommended_keywords = st_tags(
                             label='### Recommended Skills to Add',
-                            text=f'These {reco_field} skills will make you more competitive:',
+                            text=f'These {reco_field} skills will make you more competitive',
                             value=recommended_skills,
                             key='skills_rec'
                         )
@@ -452,7 +479,7 @@ def run():
                     {
                         'keywords': ['experience', 'work history', 'professional experience',
                                 'employment history', 'work experience', 'career history',
-                                'professional background', 'relevant experience'],
+                                'professional background', 'relevant experience','internship'],
                         'regex_patterns': [
                             r'work[\s-]*(hist|exp)',
                             r'prof(essional)?[\s-]*exp'
