@@ -1,8 +1,31 @@
 [theme]
-base="light"
-primaryColor="#6C63FF"
-backgroundColor="#FFFFFF"
-secondaryBackgroundColor="#F0F2F6"
-textColor="#000000"
+# Base theme (light/dark)
+base = "light"
+
+# Color scheme
+primaryColor = "#6C63FF"       # Purple - primary buttons and accents
+backgroundColor = "#FFFFFF"    # White - main background
+secondaryBackgroundColor = "#F0F2F6"  # Light gray - sidebar/alternate backgrounds
+textColor = "#000000"          # Black - primary text
+font = "sans serif"            # Modern, clean font
+
 [server]
-maxUploadSize = 1
+# File upload settings
+maxUploadSize = 1              # 1MB max file upload size
+enableCORS = false             # Disable CORS for security
+enableXsrfProtection = true    # Enable XSRF protection
+
+[runner]
+# Performance optimizations
+fastReruns = true              # Faster UI updates
+magicEnabled = false           # Disable magic commands for cleaner code
+
+[browser]
+# Browser behavior settings
+gatherUsageStats = false       # Disable usage statistics collection
+serverAddress = "localhost"    # Default server address
+
+[client]
+# Client-side settings
+showErrorDetails = false       # Don't show full error traces to users
+caching = true                # Enable caching for better performance
