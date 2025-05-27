@@ -167,7 +167,7 @@ def run():
         """, unsafe_allow_html=True)
         
         pdf_file = st.file_uploader("Choose your resume (PDF only)", type=["pdf"], help="Upload a PDF version of your resume for analysis")
-        
+            
         if pdf_file is not None:
             with st.spinner('Analyzing your resume...'):
                 time.sleep(2)
