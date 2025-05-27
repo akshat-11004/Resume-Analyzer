@@ -27,6 +27,7 @@ from Courses import ds_course, web_course, android_course, ios_course, uiux_cour
 import plotly.express as px
 import nltk
 nltk.download('stopwords')
+nltk.download('punkt')
 
 # Custom CSS for styling
 def local_css(file_name):
