@@ -114,7 +114,22 @@ def detect_responsibility_section(text):
     
     return bool(section_pattern.search(text) or bullet_pattern.search(text))
 
-# Then replace your existing code with this:
+# Add to your resume processing code
+def extract_phone_number(text):
+    # More comprehensive phone number regex
+    phone_regex = r'(\+?\d{1,2}\s?)?(\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{2}[\s.-]?\d{2})'
+    matches = re.finditer(phone_regex, text)
+    for match in matches:
+        # Validate the phone number
+        phone = match.group().strip()
+        if sum(c.isdigit() for c in phone) >= 7:  # At least 7 digits
+            return phone
+    return None
+
+# # After getting resume_data
+# if 'mobile_number' not in resume_data or not resume_data['mobile_number']:
+#     resume_text = pdf_reader(save_image_path)
+#     resume_data['mobile_number'] = extract_phone_number(resume_text)
 
 def run():
     col1 = st.container()
@@ -201,6 +216,22 @@ def run():
                     <h3>Personal Information</h3>
                 </div>
                 """, unsafe_allow_html=True)
+                if 'name' in resume_data:
+                    # Check if extracted name looks like a job title
+                    job_title_terms = ['developer', 'engineer', 'designer', 'manager', 'analyst']
+                    if any(term in resume_data['name'].lower() for term in job_title_terms):
+                        # Look for proper name (all caps, between other fields)
+                        name_match = re.search(r'(?:^|\n)([A-Z][A-Z\s]+[A-Z])(?:\n|$)', resume_text)
+                        if name_match:
+                            resume_data['name'] = name_match.group(1).strip()
+
+                # 2. Fix phone number extraction
+                if 'mobile_number' not in resume_data or not resume_data['mobile_number']:
+                    resume_data['mobile_number'] = extract_phone_number(resume_text)
+
+                # 3. Display corrected information
+                # st.info(f"👤 **Name:** {resume_data.get('name', 'Not specified')}")
+                # st.info(f"📱 **Contact:** {resume_data.get('mobile_number', 'Not specified')}")
                 
                 info_col1, info_col2 = st.columns(2)
                 with info_col1:
