@@ -80,11 +80,21 @@ cursor = connection.cursor()
 
 def insert_data(name, email, res_score, timestamp, no_of_pages, reco_field, cand_level, skills, recommended_skills, courses):
     DB_table_name = 'user_data'
-    # Provide default value if email is None or empty
     email = email if email else 'not_provided@example.com'
     insert_sql = "INSERT INTO " + DB_table_name + """
     VALUES (0,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
-    rec_values = (name, email, str(res_score), timestamp, str(no_of_pages), reco_field, cand_level, skills, recommended_skills, courses)
+    rec_values = (
+        name, 
+        email, 
+        str(res_score), 
+        timestamp, 
+        str(no_of_pages), 
+        str(reco_field),  # Ensure string
+        str(cand_level),   # Ensure string
+        str(skills),       # Ensure string
+        str(recommended_skills), 
+        str(courses)
+    )
     cursor.execute(insert_sql, rec_values)
     connection.commit()
         
@@ -143,19 +153,19 @@ def run():
     # Create table
     DB_table_name = 'user_data'
     table_sql = f"""CREATE TABLE IF NOT EXISTS {DB_table_name} (
-                    ID INT NOT NULL AUTO_INCREMENT,
-                    Name varchar(500) NOT NULL,
-                    Email_ID VARCHAR(500) NOT NULL,
-                    resume_score VARCHAR(8) NOT NULL,
-                    Timestamp VARCHAR(50) NOT NULL,
-                    Page_no VARCHAR(5) NOT NULL,
-                    Predicted_Field BLOB NOT NULL,
-                    User_level BLOB NOT NULL,
-                    Actual_skills BLOB NOT NULL,
-                    Recommended_skills BLOB NOT NULL,
-                    Recommended_courses BLOB NOT NULL,
-                    PRIMARY KEY (ID)
-                );"""
+                ID INT NOT NULL AUTO_INCREMENT,
+                Name varchar(500) NOT NULL,
+                Email_ID VARCHAR(500) NOT NULL,
+                resume_score VARCHAR(8) NOT NULL,
+                Timestamp VARCHAR(50) NOT NULL,
+                Page_no VARCHAR(5) NOT NULL,
+                Predicted_Field VARCHAR(500) NOT NULL,  # Changed from BLOB
+                User_level VARCHAR(500) NOT NULL,       # Changed from BLOB
+                Actual_skills VARCHAR(5000) NOT NULL,   # Changed from BLOB
+                Recommended_skills VARCHAR(5000) NOT NULL,
+                Recommended_courses VARCHAR(5000) NOT NULL,
+                PRIMARY KEY (ID)
+            );"""
     cursor.execute(table_sql)
 
     if choice == 'User':
@@ -167,7 +177,7 @@ def run():
         """, unsafe_allow_html=True)
         
         pdf_file = st.file_uploader("Choose your resume (PDF only)", type=["pdf"], help="Upload a PDF version of your resume for analysis")
-            
+
         if pdf_file is not None:
             with st.spinner('Analyzing your resume...'):
                 time.sleep(2)
@@ -633,9 +643,23 @@ def run():
             st.markdown("### Candidate Database")
             cursor.execute('''SELECT * FROM user_data''')
             data = cursor.fetchall()
-            df = pd.DataFrame(data, columns=['ID', 'Name', 'Email', 'Resume Score', 'Timestamp', 'Total Page',
-                                        'Predicted Field', 'User Level', 'Actual Skills', 'Recommended Skills',
-                                        'Recommended Course'])
+
+            # Create DataFrame with proper decoding
+            decoded_data = []
+            for row in data:
+                decoded_row = list(row)
+                # Decode fields that might have been stored as bytes
+                for i in range(len(decoded_row)):
+                    if isinstance(decoded_row[i], bytes):
+                        try:
+                            decoded_row[i] = decoded_row[i].decode('utf-8')
+                        except:
+                            decoded_row[i] = str(decoded_row[i])
+                decoded_data.append(decoded_row)
+
+            df = pd.DataFrame(decoded_data, columns=['ID', 'Name', 'Email', 'Resume Score', 'Timestamp', 'Total Page',
+                                                'Predicted Field', 'User Level', 'Actual Skills', 'Recommended Skills',
+                                                'Recommended Course'])
             st.dataframe(df)
             
             # Download option
