@@ -13,21 +13,27 @@ import pandas as pd
 import base64, random
 import re
 import time, datetime
+import nltk
+nltk.download('stopwords')  
+nltk.download('punkt')      # Download tokenizer data (often needed)
+nltk.download('averaged_perceptron_tagger')  # For POS tagging
+nltk.download('maxent_ne_chunker')  # For named entity recognition
+nltk.download('words') 
+
 from pyresparser import ResumeParser
-from pdfminer3.layout import LAParams, LTTextBox
-from pdfminer3.pdfpage import PDFPage
-from pdfminer3.pdfinterp import PDFResourceManager
-from pdfminer3.pdfinterp import PDFPageInterpreter
-from pdfminer3.converter import TextConverter
+from pdfminer.layout import LAParams, LTTextBox
+from pdfminer.pdfpage import PDFPage
+from pdfminer.pdfinterp import PDFResourceManager
+from pdfminer.pdfinterp import PDFPageInterpreter
+from pdfminer.converter import TextConverter
 import io, random
 from streamlit_tags import st_tags
 from PIL import Image
 import pymysql
 from Courses import ds_course, web_course, android_course, ios_course, uiux_course
 import plotly.express as px
-import nltk
-nltk.download('stopwords')
-nltk.download('punkt')
+
+
 
 # Custom CSS for styling
 def local_css(file_name):
@@ -78,6 +84,8 @@ def course_recommender(course_list):
 # Database Connection
 connection = pymysql.connect(host='localhost', user='root', password='akshat@2004', db='CV')
 cursor = connection.cursor()
+
+
 
 def insert_data(name, email, res_score, timestamp, no_of_pages, reco_field, cand_level, skills, recommended_skills, courses):
     DB_table_name = 'user_data'
@@ -201,19 +209,19 @@ def run():
     # Create table
     DB_table_name = 'user_data'
     table_sql = f"""CREATE TABLE IF NOT EXISTS {DB_table_name} (
-                ID INT NOT NULL AUTO_INCREMENT,
-                Name varchar(500) NOT NULL,
-                Email_ID VARCHAR(500) NOT NULL,
-                resume_score VARCHAR(8) NOT NULL,
-                Timestamp VARCHAR(50) NOT NULL,
-                Page_no VARCHAR(5) NOT NULL,
-                Predicted_Field VARCHAR(500) NOT NULL,  # Changed from BLOB
-                User_level VARCHAR(500) NOT NULL,       # Changed from BLOB
-                Actual_skills VARCHAR(5000) NOT NULL,   # Changed from BLOB
-                Recommended_skills VARCHAR(5000) NOT NULL,
-                Recommended_courses VARCHAR(5000) NOT NULL,
-                PRIMARY KEY (ID)
-            );"""
+            ID INT NOT NULL AUTO_INCREMENT,
+            Name varchar(500) NOT NULL,  # Extra ) after 500
+            Email_ID VARCHAR(500) NOT NULL,  # Extra ) after 500
+            resume_score VARCHAR(8) NOT NULL,
+            Timestamp VARCHAR(50) NOT NULL,
+            Page_no VARCHAR(5) NOT NULL,
+            Predicted_Field VARCHAR(500) NOT NULL,
+            User_level VARCHAR(500) NOT NULL,
+            Actual_skills VARCHAR(500) NOT NULL,
+            Recommended_skills VARCHAR(500) NOT NULL,
+            Recommended_courses VARCHAR(500) NOT NULL,
+            PRIMARY KEY (ID)
+        );"""
     cursor.execute(table_sql)
 
     if choice == 'User':
@@ -344,6 +352,10 @@ def run():
                     }
                 }
 
+                recommended_skills = []  # Empty list as default
+                reco_field = 'General'   # Default field
+                rec_course = []          # Empty course list
+                
                 # 3. Score each domain based on resume skills
                 for skill in resume_data['skills']:
                     skill_lower = skill.lower()
@@ -358,7 +370,7 @@ def run():
                     
                     # Only recommend if significant match found
                     if top_score > 0:
-                        st.success(f"🎯 Our analysis suggests you're pursuing {reco_field} roles (confidence: {top_score} points)")
+                        st.success(f"🎯 Our analysis suggests you're pursuing {reco_field} roles (confidence: {top_score}/10 points)")
                         
                         # Get recommendations based on domain
                         recommended_skills = {
@@ -390,6 +402,7 @@ def run():
                     else:
                         st.warning("🔍 Unable to determine a clear career field from skills")
                 else:
+                    recommended_skills = ['Add technical skills to your resume']
                     st.warning("⚠️ No skills found in resume")
                     
                     
@@ -750,7 +763,7 @@ def run():
             plot_data['Predicted_Field'] = plot_data['Predicted_Field'].apply(lambda x: x.decode('utf-8') if isinstance(x, bytes) else x)
             plot_data['User_level'] = plot_data['User_level'].apply(lambda x: x.decode('utf-8') if isinstance(x, bytes) else x)
             
-            # Field Distribution
+            # Field Distribut   ion
             # st.markdown("### Career Field Distribution")
             field_counts = plot_data['Predicted_Field'].value_counts().reset_index()
             field_counts.columns = ['Field', 'Count']
