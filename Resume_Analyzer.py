@@ -82,14 +82,14 @@ def course_recommender(course_list):
     return rec_course
 
 # Database Connection
-# connection = pymysql.connect(host='localhost', user='root', password='akshat@2004', db='CV')
-# cursor = connection.cursor()
-
-import sqlite3
-
-# Replace your MySQL connection with:
-connection = sqlite3.connect('resume_analyzer.db')  # Creates a local file
+connection = pymysql.connect(host='localhost', user='root', password='akshat@2004', db='cv')
 cursor = connection.cursor()
+
+# import sqlite3
+
+# # Replace your MySQL connection with:
+# connection = sqlite3.connect('resume_analyzer.db')  # Creates a local file
+# cursor = connection.cursor()
 
 
 def insert_data(name, email, res_score, timestamp, no_of_pages, reco_field, cand_level, skills, recommended_skills, courses):
@@ -210,21 +210,21 @@ def run():
     # Create Database
     
 # Modify your table creation SQL to be SQLite compatible
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS user_data (
-        ID INTEGER PRIMARY KEY AUTOINCREMENT,
-        Name TEXT NOT NULL,
-        Email_ID TEXT NOT NULL,
-        resume_score TEXT NOT NULL,
-        Timestamp TEXT NOT NULL,
-        Page_no TEXT NOT NULL,
-        Predicted_Field TEXT NOT NULL,
-        User_level TEXT NOT NULL,
-        Actual_skills TEXT NOT NULL,
-        Recommended_skills TEXT NOT NULL,
-        Recommended_courses TEXT NOT NULL
-    )
-    """)
+    DB_table_name = 'user_data'
+    table_sql = f"""CREATE TABLE IF NOT EXISTS {DB_table_name} (
+            ID INT NOT NULL AUTO_INCREMENT,
+            Name varchar(500) NOT NULL,  # Extra ) after 500
+            Email_ID VARCHAR(500) NOT NULL,  # Extra ) after 500
+            resume_score VARCHAR(8) NOT NULL,
+            Timestamp VARCHAR(50) NOT NULL,
+            Page_no VARCHAR(5) NOT NULL,
+            Predicted_Field VARCHAR(500) NOT NULL,
+            User_level VARCHAR(500) NOT NULL,
+            Actual_skills VARCHAR(500) NOT NULL,
+            Recommended_skills VARCHAR(500) NOT NULL,
+            Recommended_courses VARCHAR(500) NOT NULL,
+            PRIMARY KEY (ID)
+        );"""
 
     if choice == 'User':
         st.markdown("""

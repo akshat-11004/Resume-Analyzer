@@ -1,0 +1,5 @@
+[db]
+host = "streamlit"
+user = "akshat"
+password = "Ak@04"
+database = "cv"
