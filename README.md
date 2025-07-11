@@ -1,7 +1,5 @@
 # Resume Analyzer
 
-![Project Banner](./Logo/logo4(1).png)
-
 > AI-powered resume analysis and career recommendation system
 
 ## Features ✨
