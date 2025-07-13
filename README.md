@@ -33,4 +33,4 @@
 
 ## 🎥 Demo Video
 
-(https://github.com/user-attachments/assets/9e486a3a-3fbd-4a3e-b65d-196368558684)
+https://github.com/user-attachments/assets/3abe00e4-477a-489e-be2b-e6fa922157fb
