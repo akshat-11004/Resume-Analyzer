@@ -738,23 +738,7 @@ def run():
             
             # Download option
             st.markdown(get_table_download_link(df, 'Candidate_Data.csv', '📥 Download Full Report'), unsafe_allow_html=True)
-            
-            # Database Management Section
-            # with st.expander("⚠️ Database Management", expanded=False):
-            #     if st.button("🚨 Clean Entire Database"):
-            #             # Double confirmation
-            #             confirm = st.checkbox("I understand this will delete ALL data permanently")
-            #             if confirm:
-            #                 try:
-            #                     cursor.execute("TRUNCATE TABLE user_data")
-            #                     connection.commit()
-            #                     st.session_state.data_cleaned = True
-            #                     st.success("Database successfully cleaned!")
-            #                     st.rerun()
-            #                 except Exception as e:
-            #                     st.error(f"Error: {str(e)}")
-                    
-            
+           
             # Analytics Section
             st.markdown("## Analytics Dashboard")
             
