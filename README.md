@@ -33,4 +33,4 @@
 
 ## 🎥 Demo Video
 
-[Click here to watch the demo](videos/Recording 2025-07-13 224406.mp4)
+[Click here to watch the demo](video/demo.mp4)
