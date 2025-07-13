@@ -30,3 +30,7 @@
 - **Database**: pymysql (with MySQL compatibility)
 - **Visualization**: Plotly
 - **PDF Processing**: pdfminer.six
+
+## 🎥 Demo Video
+
+[Click here to watch the demo](videos/Recording 2025-07-13 224406.mp4)
