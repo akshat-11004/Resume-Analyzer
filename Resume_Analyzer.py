@@ -211,20 +211,20 @@ def run():
     
 # Modify your table creation SQL to be SQLite compatible
     DB_table_name = 'user_data'
-    table_sql = f"""CREATE TABLE IF NOT EXISTS {DB_table_name} (
-            ID INT NOT NULL AUTO_INCREMENT,
-            Name varchar(500) NOT NULL,  # Extra ) after 500
-            Email_ID VARCHAR(500) NOT NULL,  # Extra ) after 500
-            resume_score VARCHAR(8) NOT NULL,
-            Timestamp VARCHAR(50) NOT NULL,
-            Page_no VARCHAR(5) NOT NULL,
-            Predicted_Field VARCHAR(500) NOT NULL,
-            User_level VARCHAR(500) NOT NULL,
-            Actual_skills VARCHAR(500) NOT NULL,
-            Recommended_skills VARCHAR(500) NOT NULL,
-            Recommended_courses VARCHAR(500) NOT NULL,
-            PRIMARY KEY (ID)
-        );"""
+    # table_sql = f"""CREATE TABLE IF NOT EXISTS {DB_table_name} (
+    #         ID INT NOT NULL AUTO_INCREMENT,
+    #         Name varchar(500) NOT NULL,  # Extra ) after 500
+    #         Email_ID VARCHAR(500) NOT NULL,  # Extra ) after 500
+    #         resume_score VARCHAR(8) NOT NULL,
+    #         Timestamp VARCHAR(50) NOT NULL,
+    #         Page_no VARCHAR(5) NOT NULL,
+    #         Predicted_Field VARCHAR(500) NOT NULL,
+    #         User_level VARCHAR(500) NOT NULL,
+    #         Actual_skills VARCHAR(500) NOT NULL,
+    #         Recommended_skills VARCHAR(500) NOT NULL,
+    #         Recommended_courses VARCHAR(500) NOT NULL,
+    #         PRIMARY KEY (ID)
+    #     );"""
 
     if choice == 'User':
         st.markdown("""
